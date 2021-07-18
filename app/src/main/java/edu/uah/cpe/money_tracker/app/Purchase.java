@@ -1,79 +1,31 @@
-package edu.uah.cpe.money_tracker.app;
-
-import android.os.Parcel;
-import android.os.Parcelable;
+package fizzsoftware.moneytracker;
 
 import java.io.Serializable;
 import java.text.DecimalFormat;
 
-/**
- * Created by ninja_boy on 11/18/14.
- */
-public class Purchase implements Serializable{
-
-    private String title;
+public class Purchase implements Serializable {
     private double price;
+    private String title;
 
-
-    public Purchase() {
-
-        // blarg
+    public void setTitle(String tit) {
+        this.title = tit;
     }
 
+    public void setPrice(double pr) {
+        this.price = pr;
+    }
 
-    //  ******* BEGIN Required Parcelable functions  ********
-//    public int describeContents() {
-//        return 0;
-//    }
-//
-//
-//    private Purchase(Parcel in) {
-//
-//        this();
-//
-//        readFromParcel(in);
-//    }
-//
-//
-//    public void readFromParcel(Parcel in) {
-//
-//        title = in.readString();
-//        price = in.readDouble();
-//    }
-//
-//
-//    public void writeToParcel(Parcel out, int flags) {
-//
-//        out.writeString(title);
-//        out.writeDouble(price);
-//    }
-//
-//
-//    public static final Parcelable.Creator<Purchase> CREATOR = new Parcelable.Creator<Purchase>() {
-//        public Purchase createFromParcel(Parcel in) {
-//            return new Purchase(in);
-//        }
-//
-//        public Purchase[] newArray(int size) {
-//            return new Purchase[size];
-//        }
-//    };
-    //  ******** END Required Parcelable functions  ********
+    public String getTitle() {
+        return this.title;
+    }
 
-
-    public void setTitle(String tit) {title = tit;}
-
-    public void setPrice(double pr) {price = pr;}
-
-    public String getTitle() {return title;}
-
-    public double getPrice() {return price;}
+    public double getPrice() {
+        return this.price;
+    }
 
     public String toString() {
-
         DecimalFormat f = new DecimalFormat("##0.00");
         f.setMinimumFractionDigits(2);
-        return (title+"  =  $ "+f.format(price));
+        return this.title + "  =  $ " + f.format(this.price);
     }
-
-}  // end Purchase class
+}

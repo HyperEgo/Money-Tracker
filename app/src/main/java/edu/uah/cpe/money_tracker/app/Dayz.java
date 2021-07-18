@@ -1,182 +1,113 @@
-package edu.uah.cpe.money_tracker.app;
-
-import android.content.Context;
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.util.Log;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
+package fizzsoftware.moneytracker;
 
 import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 
-/**
- * Created by ninja_boy on 11/19/14.
- */
-public class Dayz implements Serializable{  // implement parcelable to save data on screen rotate
-
-
+public class Dayz implements Serializable {
     private String dateTitle;
-    private ArrayList<Purchase> purchaseList;
-
+    private ArrayList<Purchase> purchaseList = new ArrayList<>();
 
     public Dayz() {
-
-        purchaseList = new ArrayList<Purchase>();  // initialize arraylist
-
-        // get date & time
-        Date now = new Date();
-//        SimpleDateFormat simpleFormatter = new SimpleDateFormat("E hh:mm:ss a 'on' yyyy.MM.dd zzz");  // SimpleDateFormat
-        SimpleDateFormat simpleFormatter = new SimpleDateFormat("E hh:mm:ss a '['MM-dd-yyyy']'");  // SimpleDateFormat
-        String tmpDate = simpleFormatter.format(now);
-        // check date obj for validity
-        if (this.isDateValid(tmpDate)) {dateTitle = tmpDate;}
-        else {dateTitle = "Date Not Found";}
+        String tmpDate = new SimpleDateFormat("E hh:mm:ss a '['z']' '<'MM-dd-yyyy'>'").format(new Date());
+        if (isDateValid(tmpDate)) {
+            this.dateTitle = tmpDate;
+        } else {
+            this.dateTitle = "Date Not Found";
+        }
     }
 
-
-    //  ******* BEGIN Required Parcelable functions  ********
-//    public int describeContents() {  // req parcelable; works for screen rotate
-//        return 0;
-//    }
-//
-//
-//    private Dayz(Parcel in) {  // req parcelable; works for screen rotate
-//
-//        this();
-//
-////        purchaseList = new ArrayList<Purchase>();
-//        readFromParcel(in);
-//
-////        dateTitle = in.readString();
-////        purchaseList = in.readArrayList(Purchase.class.getClassLoader());  // not working; not reading arraylist correctly
-//    }
-//
-//
-//    public void readFromParcel(Parcel in) {
-//
-//        dateTitle = in.readString();
-//
-////        if (purchaseList == null) {
-////
-////            purchaseList = new ArrayList<Purchase>();
-////        }
-//        in.readTypedList(purchaseList, Purchase.CREATOR);
-//    }
-//
-//
-//    public void writeToParcel(Parcel out, int flags) {  // req parcelable; works for screen rotate
-//
-//        out.writeString(dateTitle);
-//        out.writeTypedList(purchaseList);
-//    }
-//
-//
-//    public static final Parcelable.Creator<Dayz> CREATOR = new Parcelable.Creator<Dayz>() {  // req parcelable; works for screen rotate
-//        public Dayz createFromParcel(Parcel in) {
-//            return new Dayz(in);
-//        }
-//
-//        public Dayz[] newArray(int size) {
-//            return new Dayz[size];
-//        }
-//    };
-    //  ******** END Required Parcelable functions  ********
-
-
-    public boolean isDateValid(String str) {  // test for valid date string
-        if (str==null) {return false;}
-        else {return true;}
+    public boolean isDateValid(String str) {
+        if (str == null) {
+            return false;
+        }
+        return true;
     }
 
-    public void setDateTitle(String dat) {dateTitle = dat;}
+    public void setDateTitle(String dat) {
+        this.dateTitle = dat;
+    }
 
-    public String getDateTitle() {return dateTitle;}
+    public String getDateTitle() {
+        return this.dateTitle;
+    }
 
-    public int getPurchaseListSize() {return purchaseList.size();}  // maybe not?
+    public int getPurchaseListSize() {
+        return this.purchaseList.size();
+    }
 
-    public ArrayList<Purchase> getPurchaseList() {return purchaseList;}
+    public ArrayList<Purchase> getPurchaseList() {
+        return this.purchaseList;
+    }
 
     public String getPurchaseNodeName(int z) {
-
-        Purchase pu = this.purchaseList.get(z);
-        return pu.getTitle();
+        return this.purchaseList.get(z).getTitle();
     }
-
 
     public String getPurchaseNodePrice(int y) {
-
         DecimalFormat e = new DecimalFormat("##00.00");
         e.setMinimumFractionDigits(2);
-
-        Purchase pu = this.purchaseList.get(y);
-        return e.format(pu.getPrice());  // show correct number format in editor window
+        return e.format(this.purchaseList.get(y).getPrice());
     }
 
-
     public void setPurchaseNodeName(String s, int z) {
-
         Purchase pu = this.purchaseList.get(z);
-        if(s.isEmpty()) {s = "Blank Purchase";}  // account for empty entry
+        if (s.isEmpty()) {
+            s = "Blank Purchase";
+        }
         pu.setTitle(s);
         this.purchaseList.set(z, pu);
     }
 
-
     public void setPurchaseNodePrice(String d, int y) {
-
         Purchase pu = this.purchaseList.get(y);
-        if(d.isEmpty()) {d = "0.00";}  // account for empty entry
+        if (d.isEmpty()) {
+            d = "0.00";
+        }
         pu.setPrice(Double.parseDouble(d));
         this.purchaseList.set(y, pu);
     }
 
-
-    public void addPurchase(String name, String price){
-
+    public void addPurchase(String name, String price) {
         Purchase p = new Purchase();
-        if(name.isEmpty()) {name = "Blank Purchase";}  // account for empty entry
-        if(price.isEmpty()) {price = "0.00";}  // account for empty entry
+        if (name.isEmpty()) {
+            name = "Blank Purchase";
+        }
+        if (price.isEmpty()) {
+            price = "0.00";
+        }
         p.setTitle(name);
         p.setPrice(Double.parseDouble(price));
         this.purchaseList.add(p);
     }
 
-
     public void removeLastPurchase() {
-
-        if(purchaseList.size()>0) {  // check list size before proceeding
-            this.purchaseList.remove(purchaseList.size()-1);
+        if (this.purchaseList.size() > 0) {
+            this.purchaseList.remove(this.purchaseList.size() - 1);
         }
     }
-
 
     public void clearPurchaseList() {
-
-        if(purchaseList.size()>0) {  // check list size before proceeding
-            purchaseList.clear();
+        if (this.purchaseList.size() > 0) {
+            this.purchaseList.clear();
         }
     }
 
-
-    public double getPurchaseTotal() {  // function working correctly
-
-        double sum = 0;
-        for (Purchase p : purchaseList) {
-            sum = sum + p.getPrice();
+    public double getPurchaseTotal() {
+        double sum = 0.0d;
+        Iterator i$ = this.purchaseList.iterator();
+        while (i$.hasNext()) {
+            sum += i$.next().getPrice();
         }
         return sum;
     }
 
-
     public String toString() {
-
-        DecimalFormat f = new DecimalFormat("##00.00");
+        DecimalFormat f = new DecimalFormat();
         f.setMinimumFractionDigits(2);
-        return (dateTitle+"  Total =  $ "+f.format(getPurchaseTotal()));
+        return this.dateTitle + "  =  $ " + f.format(getPurchaseTotal());
     }
-
-}  // end Dayz class
+}
